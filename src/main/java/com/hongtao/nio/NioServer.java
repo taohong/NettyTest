@@ -43,6 +43,7 @@ public class NioServer {
 						SocketChannel socketChannel = serverChannel.accept();
 						socketChannel.configureBlocking(false);
 						socketChannel.register(sel, SelectionKey.OP_READ);
+						
 						keyIt.remove();
 						System.out.println("A client is connected!");
 					}else if((key.readyOps() & SelectionKey.OP_READ) == SelectionKey.OP_READ){
@@ -53,12 +54,24 @@ public class NioServer {
 							int i = sc.read(buf);
 							System.out.println("i is " + i);
 							if(i == 0 || i == -1){//no data send from client or client is closed
+								try {
+									Thread.sleep(50);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								break;
 							}
 							
 							buf.flip();
 //							buf.put(new byte[]{100});
 							sc.write(buf);
+							try {
+								Thread.sleep(50);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 						
 						System.out.println("A client request is responsed!");
